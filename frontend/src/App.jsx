@@ -9,6 +9,7 @@ import YourFormBuilder from './_components/FormBuilder/FormBuilder';
 import NotFound from './_components/NotFound';
 import Signup from './_components/Authentication/Signup';
 import Login from './_components/Authentication/Login';
+import AuthWrapper from './AuthWrapper';
 
 const router = createBrowserRouter([
   {
@@ -36,9 +37,11 @@ const router = createBrowserRouter([
 function App() {
   return (
     <Provider store={store}>
-      <DndProvider backend={HTML5Backend}>
-        <RouterProvider router={router} />
-      </DndProvider>
+      <AuthWrapper>
+        <DndProvider backend={HTML5Backend}>
+          <RouterProvider router={router} />
+        </DndProvider>
+      </AuthWrapper>
     </Provider>
   );
 }
