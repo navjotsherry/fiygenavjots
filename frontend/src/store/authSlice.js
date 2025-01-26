@@ -25,6 +25,7 @@ export const reloadUserSlice = createAsyncThunk("auth/reloadUser", async (token,
     const response = await axios.post(`${serverUrl}/myProfile`, token,{withCredentials:true});
     return response.data.user;
   } catch (error) {
+    localStorage.removeItem("token")
     return thunkAPI.rejectWithValue(error.response.data.message);
   }
 });

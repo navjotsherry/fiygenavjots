@@ -1,9 +1,9 @@
 import express from 'express'
 import {PrismaClient} from '@prisma/client'
 import {ErrorHandlerMid} from './middleware/ErrorHandlerMid.js'
-import formBuilderRoutes from './routers/formBuilderRoutes.js'
 import userRouter from './routes/userRoutes.js'
 import cors from 'cors'
+import formRouter from './routes/formRoutes.js'
 
 
 // Handling Uncaught Exception
@@ -36,7 +36,7 @@ app.use((req, res, next) => {
 });
 
 //API Routes
-app.use('/api',formBuilderRoutes)
+app.use('/api',formRouter)
 app.use('',userRouter)
 app.use(ErrorHandlerMid)
 

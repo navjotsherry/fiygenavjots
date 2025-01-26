@@ -1,8 +1,23 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 const initialState = {
   components: [], // List of form components
 };
+
+export const saveForm = createAsyncThunk("form/saveForm", async (formData, { rejectWithValue }) => {
+  try {
+
+    const response = await axios.post(`${serverUrl}/api/forms/save`, formData,{withCredentials:true});
+
+    if (!response.ok) {
+      throw new Error("Failed to save the form");
+    }
+
+    return response.data;
+  } catch (error) {
+    return rejectWithValue(error.message);
+  }
+});
 
 const formSlice = createSlice({
   name: "form",
@@ -26,6 +41,20 @@ const formSlice = createSlice({
     removeComponent: (state, action) => {
       const { id } = action.payload;
       state.components = state.components.filter((component) => component.id !== id);
+    },
+    extraReducers: (builder) => {
+      builder
+        .addCase(saveForm.pending, (state) => {
+          state.status = "loading";
+          state.error = null;
+        })
+        .addCase(saveForm.fulfilled, (state) => {
+          state.status = "succeeded";
+        })
+        .addCase(saveForm.rejected, (state, action) => {
+          state.status = "failed";
+          state.error = action.payload;
+        });
     },
   },
 });

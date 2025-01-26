@@ -10,9 +10,9 @@ function DraggableElement({ type, label, options = [] }) {
   const renderElement = () => {
     switch (type) {
       case "text":
-        return <input type="text" disabled placeholder={label} className="w-full p-2 border border-gray-300 rounded-md" />;
+        return <input type="text" disabled placeholder={label} className="w-full p-1 border border-gray-300 rounded-md" />;
       case "textarea":
-        return <textarea disabled placeholder={label} className="w-full p-2 border border-gray-300 rounded-md" rows="2" />;
+        return <textarea disabled placeholder={label} className="w-full p-1 border border-gray-300 rounded-md" rows="1" />;
       case "dropdown":
         return (
           <select disabled className="w-full p-2 border border-gray-300 rounded-md">
@@ -45,7 +45,7 @@ function DraggableElement({ type, label, options = [] }) {
   };
 
   return (
-    <div ref={dragRef} className="p-4 bg-white my-2 shadow-md rounded-md cursor-move">
+    <div ref={dragRef} className="p-2 bg-white my-2 shadow-md rounded-md cursor-move">
       <label className="block text-sm font-medium text-gray-700 mb-2">{label}</label>
       {renderElement()}
     </div>
