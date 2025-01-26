@@ -1,0 +1,31 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql" // You can use MySQL, SQLite, etc., if needed.
+  url      = env("DATABASE_URL") // Replace with your database URL.
+}
+
+model User {
+  id          String   @id @default(uuid())
+  email       String   @unique
+  password    String
+  name        String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  forms       Form[]   // One-to-many relationship with forms
+}
+
+model Form {
+  id          String   @id @default(uuid())
+  formName    String
+  formData    Json
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  userId      String   // Foreign key
+  user        User     @relation(fields: [userId], references: [id]) // Relation to User model
+}

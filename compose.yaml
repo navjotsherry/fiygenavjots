@@ -1,0 +1,44 @@
+version: '3.9'
+services:
+  fygie_frontend:
+    container_name: fygie_frontend
+    image: frontend
+    build:
+      context: ./frontend
+      dockerfile: frontend.dockerfile
+    ports:
+      - 5174:80
+    # environment:
+    restart: always
+    depends_on:
+      - fygie_backend
+  fygie_backend:
+    container_name: fygie_backend
+    image: backend
+    build:
+      context: ./backend
+      dockerfile: backend.dockerfile
+    ports:
+      - 4010:4000
+      - 5566:5555
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@fygie_db:5432/postgres?schema=public
+    env_file:
+      - .env
+    depends_on:
+      - fygie_db
+  fygie_db:
+    container_name: fygie_db
+    image: postgres:12
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata: {}
