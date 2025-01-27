@@ -3,6 +3,7 @@ import asyncAwaitErrorHandler from "../utils/asyncAwaitErrorHandler.js";
 import { prisma } from "../index.js"; // Import your Prisma client
 import { sendJWToken } from "../utils/sendJWToken.js";
 import bcrypt from "bcryptjs"; // For password hashing
+import jwt from "jsonwebtoken"
 
 export const registerUser = asyncAwaitErrorHandler(async (req, res, next) => {
   const { name, email, password } = req.body;
