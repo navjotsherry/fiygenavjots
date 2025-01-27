@@ -41,7 +41,7 @@ export const getFormById = asyncAwaitErrorHandler(async (req, res, next) => {
   const { id } = req.params;
 
   const form = await prisma.form.findUnique({
-    where: { id: parseInt(id) },
+    where: { id },
   });
 
   if (!form) {
@@ -54,10 +54,10 @@ export const getFormById = asyncAwaitErrorHandler(async (req, res, next) => {
 // Update a form
 export const updateForm = asyncAwaitErrorHandler(async (req, res, next) => {
   const { id } = req.params;
-  const { name, fields } = req.body;
+  const { formName, formData } = req.body;
 
   const form = await prisma.form.findUnique({
-    where: { id: parseInt(id) },
+    where: { id },
   });
 
   if (!form) {
@@ -65,10 +65,10 @@ export const updateForm = asyncAwaitErrorHandler(async (req, res, next) => {
   }
 
   const updatedForm = await prisma.form.update({
-    where: { id: parseInt(id) },
+    where: { id },
     data: {
-      name: name || form.name,
-      fields: fields ? JSON.stringify(fields) : form.fields,
+      formName: formName || form.formName,
+      formData: formData || form.formData,
     },
   });
 
@@ -80,7 +80,7 @@ export const deleteForm = asyncAwaitErrorHandler(async (req, res, next) => {
   const { id } = req.params;
 
   const form = await prisma.form.findUnique({
-    where: { id: parseInt(id) },
+    where: { id },
   });
 
   if (!form) {
@@ -88,30 +88,8 @@ export const deleteForm = asyncAwaitErrorHandler(async (req, res, next) => {
   }
 
   await prisma.form.delete({
-    where: { id: parseInt(id) },
+    where: { id },
   });
 
   res.json({ message: "Form deleted successfully" });
-});
-
-// Submit form data
-export const submitFormResponse = asyncAwaitErrorHandler(async (req, res, next) => {
-  const { formId, responses } = req.body;
-
-  const form = await prisma.form.findUnique({
-    where: { id: parseInt(formId) },
-  });
-
-  if (!form) {
-    return next(new ErrorHandler("Form not found", 404));
-  }
-
-  const submission = await prisma.formResponse.create({
-    data: {
-      formId: parseInt(formId),
-      responses: JSON.stringify(responses),
-    },
-  });
-
-  res.status(201).json({ message: "Form response submitted successfully", submission });
 });

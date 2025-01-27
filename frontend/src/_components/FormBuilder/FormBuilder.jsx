@@ -1,37 +1,65 @@
 import React, { useEffect, useState } from "react";
 import DropArea from "./DropArea";
 import DraggableElement from "./DraggableComponent";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { saveForm } from "../../store/formSlice.js";
+import { fetchForm, saveForm, updateForm } from "../../store/formSlice.js";
 
 function YourFormBuilder() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [searchParams] = useSearchParams();
+  const edit = searchParams.get('edit')
   const auth = useSelector((state) => state.auth);
   const [formName, setFormName] = useState("Editable Form Name"); // Default form name
-  const formComponents = useSelector((state) => state.form.components); // Fetch current components from Redux state
+  const [editing,setEditing] = useState()
+  const form = useSelector((state) => state.form); // Fetch current components from Redux state
 
   useEffect(() => {
+    setFormName(form.formName)
+    if(edit){
+      try {
+        dispatch(fetchForm(edit))
+        setEditing(true) 
+      } catch (error) {
+        alert(error.message)
+      }
+      
+    }
     if (!auth.user) {
       navigate("/login");
     }
-  }, [auth.user, navigate]);
+  }, [auth.user, navigate,editing,dispatch ,form.formName]);
 
   const handleSaveForm = () => {
     // Dispatch saveForm action with form data
     const formData = {
       userId:auth.user.id,
-      formName,
-      formData: formComponents,
+      formName:formName,
+      formData: form.components,
     };
+    if(!formName){
+      alert("Please change the form name on top!")
+      return
+    }
+    if(editing){
+      formData.id=edit;
+      try {
+        dispatch(updateForm(formData));
+        alert("Updated Successfully!")
+        navigate('/dashboard')
+      } catch (error) {
+        alert(error.message)
+      }
+      return
+    }
     try {
       dispatch(saveForm(formData));
       alert("Saved Successfully!")
+      navigate('/dashboard')
     } catch (error) {
       alert(error.message)
     }
-    
   };
 
   return (
@@ -40,9 +68,9 @@ function YourFormBuilder() {
       <div className="mb-6">
         <input
           type="text"
-          value={formName}
+          value={formName || "Editable Heading"}
           onChange={(e) => setFormName(e.target.value)}
-          className="text-3xl font-bold w-full bg-transparent border-b border-gray-300 focus:outline-none focus:border-blue-500"
+          className="text-3xl text-center font-bold w-full bg-transparent border-b border-gray-300 focus:outline-none focus:border-blue-500"
           placeholder="Enter Form Name"
         />
       </div>
@@ -84,7 +112,7 @@ function YourFormBuilder() {
               onClick={handleSaveForm}
               className="px-4 py-2 bg-blue-500 text-white rounded shadow hover:bg-blue-600 focus:outline-none"
             >
-              Save Form
+              {editing? 'Update': 'Save'} Form
             </button>
           </div>
         </div>

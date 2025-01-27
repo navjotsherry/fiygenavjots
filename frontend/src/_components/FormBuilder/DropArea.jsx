@@ -26,11 +26,11 @@ function DropArea() {
       ref={dropRef}
       className="min-h-[80vh] p-4 border-2 rounded bg-gray-50 border-gray-300"
     >
-      {components.length === 0 ? (
+      {components && components.length === 0 ? (
         <p className="text-sm text-gray-500">Drag elements here to build your form</p>
       ) : (
         <form className="space-y-4">
-          {components.map((component, index) => (
+          {components && components.map((component, index) => (
             <DraggableEditableComponent
               key={component.id}
               index={index}

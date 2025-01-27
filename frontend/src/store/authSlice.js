@@ -44,7 +44,7 @@ export const registerUser = createAsyncThunk("auth/registerUser", async (credent
 export const logoutUser = createAsyncThunk("auth/logoutUser", async (_, thunkAPI) => {
   try {
     localStorage.removeItem("token")
-    await axios.post(`${serverUrl}/logout`);
+    await axios.get(`${serverUrl}/logout`);
     return null;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response.data.message);
