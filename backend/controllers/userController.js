@@ -1,57 +1,3 @@
-// import ErrorHandler from "../utils/ErrorHandler.js";
-// import asyncAwaitErrorHandler from '../utils/asyncAwaitErrorHandler.js'
-// import userSchema from "../config/db/userSchema.js";
-// import { sendJWToken } from "../utils/sendJWToken.js";
-// import cloudinary from 'cloudinary'
-
-
-//  export const registerUser = asyncAwaitErrorHandler(async (req,res,next)=>{
-//     const {name,email,password} = req.body
-    
-//     const user = await userSchema.create({
-//         name, email,password
-//     })
-
-//     sendJWToken(user,201,res)
-// })
-
-
-// export const loginUser = asyncAwaitErrorHandler(async (req,res,next)=>{
-//     const {email,password} = req.body
-
-//     if(!email || !password){
-//         return next(new ErrorHandler("Please enter both email and password",401))
-//     }
-
-//     const user = await userSchema.findOne({email}).select("+password")
-
-//     if(!user){
-//         return next(new ErrorHandler("Please enter valid email or password",400))
-//     }
-    
-//     const passwordMatched = await user.comparePassword(password)
-
-//     if(!passwordMatched){
-//         return next(new ErrorHandler("Please enter valid email or password",400))
-//     }
-
-//     sendJWToken(user,200,res)
-
-// })
-
-// //Logout user
-// export const logoutUser = asyncAwaitErrorHandler(async (req,res,next)=>{    
-//     res.cookie("token", null,
-//         {expires: new Date(Date.now()),
-//         httpOnly:true,
-//         secure:true,
-//         sameSite:"none"})
-//     res.status(200).json({
-//             success:true
-//         })
-// })
-
-
 import ErrorHandler from "../utils/ErrorHandler.js";
 import asyncAwaitErrorHandler from "../utils/asyncAwaitErrorHandler.js";
 import { prisma } from "../index.js"; // Import your Prisma client
@@ -132,3 +78,25 @@ export const logoutUser = asyncAwaitErrorHandler(async (req, res, next) => {
     });
   });
   
+  export const myProfile = asyncAwaitErrorHandler(async (req, res, next) => {
+    const { token } = req.body;
+
+    if (!token) {
+      return next(new ErrorHandler("Please login to access this resource", 400));
+    }
+
+    // Verify the token
+    const decodedData = jwt.verify(token, process.env.JWT_SECRET_KEY);
+
+    // Fetch user from the database
+    const user = await prisma.user.findUnique({
+      where: { id: decodedData.id },
+    });
+
+    if (!user) {
+      return next(new ErrorHandler("User does not exist", 401));
+    }
+
+    // Send JWT token
+    sendJWToken(user, 200, res);
+  });

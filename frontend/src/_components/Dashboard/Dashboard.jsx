@@ -38,9 +38,9 @@ const Dashboard = () => {
       <div className="w-full max-w-4xl bg-white shadow-md rounded-lg p-6">
         <h2 className="text-xl font-bold text-gray-800 mb-4">Your Forms</h2>
         <ul className="space-y-4">
-          {forms ? forms.map((form)=>{
+          {forms && forms.length > 1 ? forms.map((form)=>{
             return <FormCard key={form.id} name={form.formName} createdAt={form.createdAt}/>
-          }) : <h1>No Forms Yet!</h1>}
+          }) : <h1>No Forms Yet! Please Crete new Form.</h1>}
         </ul>
       </div>
     </div>
