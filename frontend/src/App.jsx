@@ -10,11 +10,16 @@ import NotFound from './_components/NotFound';
 import Signup from './_components/Authentication/Signup';
 import Login from './_components/Authentication/Login';
 import AuthWrapper from './AuthWrapper';
+import Dashboard from './_components/Dashboard/Dashboard';
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Home />,
+  },
+  {
+    path:'/dashboard',
+    element:<Dashboard/>
   },
   {
     path: "/form-builder",

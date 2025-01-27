@@ -21,7 +21,7 @@ const Login = () => {
       alert(auth.error); 
     }
     if (!auth.error && auth.user) {
-      navigate('/form-builder'); 
+      navigate('/dashboard'); 
     }
   }, [auth.error, auth.user, navigate]);
 
