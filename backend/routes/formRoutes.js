@@ -6,26 +6,23 @@ import {
   updateForm,
   deleteForm,
   submitFormResponse,
-} from '../controllers/formController.js';
+} from '../controllers/formBuilder.js';
 
 const formRouter = express.Router();
 
 // Route to create a new form
-formRouter.post('/save', createForm);
+formRouter.post('/forms/save', createForm);
 
 // Route to get all forms
-formRouter.get('/list', getAllForms);
+formRouter.get('/forms/list', getAllForms);
 
 // Route to get a single form by ID
-formRouter.get('/:id', getFormById);
+formRouter.get('/forms/:id', getFormById);
 
 // Route to update a form by ID
-formRouter.put('/:id', updateForm);
+formRouter.put('/forms/:id', updateForm);
 
 // Route to delete a form by ID
-formRouter.delete('/:id', deleteForm);
-
-// Route to submit form responses
-formRouter.post('/submit', submitFormResponse);
+formRouter.delete('/forms/:id', deleteForm);
 
 export default formRouter;

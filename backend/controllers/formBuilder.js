@@ -4,16 +4,21 @@ import { prisma } from "../index.js";
 
 // Create a new form
 export const createForm = asyncAwaitErrorHandler(async (req, res, next) => {
-  const { name, fields } = req.body;
+  const { formName, formData, userId } = req.body;
 
-  if (!name || !fields) {
+  if(!userId){
+    return next(new ErrorHandler("Please login to use this resource",400))
+  }
+
+  if (!formName || !formData) {
     return next(new ErrorHandler("Form name and fields are required", 400));
   }
 
   const form = await prisma.form.create({
     data: {
-      name,
-      fields: JSON.stringify(fields),
+      formName,
+      formData,
+      userId
     },
   });
 
