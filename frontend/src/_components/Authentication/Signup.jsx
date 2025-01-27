@@ -34,7 +34,11 @@ const Signup = () => {
     }
 
     // If all validations pass, proceed with signup
-    dispatch(registerUser(authData));
+    try {
+      dispatch(registerUser(authData));
+    } catch (error) {
+      alert(error.message)
+    }
   };
 
   useEffect(() => {

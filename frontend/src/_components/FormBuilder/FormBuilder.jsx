@@ -21,10 +21,17 @@ function YourFormBuilder() {
   const handleSaveForm = () => {
     // Dispatch saveForm action with form data
     const formData = {
+      userId:auth.user.id,
       formName,
-      components: formComponents,
+      formData: formComponents,
     };
-    dispatch(saveForm(formData));
+    try {
+      dispatch(saveForm(formData));
+      alert("Saved Successfully!")
+    } catch (error) {
+      alert(error.message)
+    }
+    
   };
 
   return (
